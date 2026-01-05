@@ -10,18 +10,17 @@ Objectives:
 
 ## Projects
 ### E-Commerce EDA with SQL  
-**Dataset:** Brazilian E-Commerce Public Dataset (Olist)
-**Description:**  
+#### **Dataset:** Brazilian E-Commerce Public Dataset (Olist)
+#### **Description:**  
 This project performs exploratory data analysis on Brazilian e-commerce data to understand customer behavior, order patterns, revenue performance, and retention using SQL.
-**Key Analyses:**
-**Key Analyses:**
+#### **Key Analyses:**
 - Exploring database structure and data quality
 - Analyzing order volume and trends over time
 - Revenue analysis by product category and seller
 - Customer distribution: one-time vs repeat purchasers
 - Revenue contribution from repeat customers
 - Customer retention analysis
-**SQL Skills Used:**
+#### **SQL Skills Used:**
 - JOINs and aggregations
 - Common Table Expressions (CTEs)
 - Window functions
