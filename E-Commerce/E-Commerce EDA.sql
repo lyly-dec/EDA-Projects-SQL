@@ -1,4 +1,4 @@
-USE ecommerce
+USE ecommerce;
 /*
 ==================================================================
 1. Database exploration
@@ -15,7 +15,9 @@ SELECT table_name,
        data_type,
        is_nullable
 FROM information_schema.columns
-WHERE table_schema = 'ecommerce';
+WHERE table_schema = 'ecommerce'; 
+
+
 /*
 ==================================================================
 2. Summarizing Data Using Aggregations
@@ -23,12 +25,11 @@ WHERE table_schema = 'ecommerce';
 */
 -- 2.1. How many years of data do we have? 
 SELECT 
-    COUNT(DISTINCT YEAR(order_purchase_timestamp)) AS number_of_years
-FROM orders2;
-
+     COUNT(DISTINCT YEAR(order_purchase_timestamp)) AS number_of_years
+FROM orders;
 --  2.2. Count the number of orders placed every year
-SELECT YEAR(order_purchase_timestamp) ,COUNT(order_id) as "Number of orders placed"
-FROM orders2
+SELECT YEAR(order_purchase_timestamp), COUNT(order_id) as "Number of orders placed"
+FROM orders
 GROUP BY YEAR(order_purchase_timestamp) 
 ORDER BY YEAR(order_purchase_timestamp);
 
@@ -47,11 +48,11 @@ JOIN payments as pm ON pm.order_id = o.order_id
 GROUP BY p.product_category;
 
 -- 2.5. Which city has the highest number of orders?
-SELECT customers.customer_city, COUNT(orders2.order_id) as number_of_orders
-FROM orders2 
-JOIN customers ON customers.customer_id = orders2.customer_id
+SELECT customers.customer_city, COUNT(orders.order_id) as number_of_orders
+FROM orders
+JOIN customers ON customers.customer_id = orders.customer_id
 GROUP BY customers.customer_city
-ORDER BY COUNT(orders2.order_id) DESC
+ORDER BY COUNT(orders.order_id) DESC
 LIMIT 1;
 /*
 ==================================================================
@@ -66,7 +67,7 @@ WITH revenue as
 ( 
 SELECT s.seller_id, SUM(p.payment_value) as sum_payment_value
 FROM payments p
-JOIN orders2 o
+JOIN orders o
 ON p.order_id = o.order_id
 JOIN order_items od
 ON o.order_id = od.order_id
@@ -81,7 +82,7 @@ FROM revenue;
 WITH total_sales as 
 (SELECT YEAR(o.order_purchase_timestamp) as 'year', 
 		MONTH(o.order_purchase_timestamp) as 'month', SUM(p.payment_value) as 'sales'
-FROM orders2 o
+FROM orders o
 JOIN payments p ON o.order_id = p.order_id
 GROUP BY YEAR(o.order_purchase_timestamp), MONTH(o.order_purchase_timestamp)
 ORDER BY YEAR(o.order_purchase_timestamp) )
@@ -93,23 +94,23 @@ FROM total_sales;
 WITH order_count_table as 
 (SELECT  c.customer_unique_id, COUNT(o.order_id) as order_count
 FROM customers c
-JOIN orders2 o ON o.customer_id = c.customer_id
+JOIN orders o ON o.customer_id = c.customer_id
 GROUP BY c.customer_unique_id)
 SELECT SUM(CASE WHEN order_count = 1 THEN 1 END) as One_time_customers,
 	   SUM(CASE WHEN order_count > 1 THEN 1 END) as Repeat_customers,
-	   ROUND(100.0 * SUM(CASE WHEN order_count > 1 THEN 1 END) / COUNT(*),2) as repeat_customer_rate
-FROM order_count_table;
+	   ROUND(100.0 * SUM(CASE WHEN order_count > 1 THEN 1 END) / COUNT(*),2) as repeat_customer_rate;
+FROM order_count_table
 -- 3.5. What share of total revenue comes from repeat customers?
 WITH repeat_customers as 
 (SELECT  c.customer_unique_id, COUNT(o.order_id) as order_count
 FROM customers c
-JOIN orders2 o ON o.customer_id = c.customer_id
+JOIN orders o ON o.customer_id = c.customer_id
 GROUP BY c.customer_unique_id
 HAVING order_count > 1),
 revenue as
 (SELECT c.customer_unique_id, SUM(pm.payment_value) as customer_revenue
 FROM payments pm
-JOIN orders2 o ON o.order_id = pm.order_id
+JOIN orders o ON o.order_id = pm.order_id
 JOIN customers c ON o.customer_id = c.customer_id
 GROUP BY c.customer_unique_id),
 revenue_per_customer as
@@ -124,13 +125,13 @@ FROM revenue_per_customer;
 -- 3.6.What is the customer retention rate within three months after the first purchase?
 WITH the_first_order as 
 (SELECT c.customer_unique_id, MIN(o.order_purchase_timestamp) as "first_order"
-FROM orders2 o
+FROM orders o
 JOIN customers c ON o.customer_id = c.customer_id
 GROUP BY c.customer_unique_id),
 retained_customer as
 (SELECT tf.customer_unique_id
 FROM the_first_order tf
-JOIN orders2 o 
+JOIN orders o 
 ON o.order_purchase_timestamp > tf.first_order
 AND o.order_purchase_timestamp <= DATE_ADD(tf.first_order, interval 3 month)
 JOIN customers c
@@ -139,3 +140,9 @@ GROUP BY tf.customer_unique_id)
 SELECT ROUND(COUNT(r.customer_unique_id) / COUNT(t.customer_unique_id)*100,2) as retention_rate
 FROM the_first_order t
 LEFT JOIN retained_customer r ON t.customer_unique_id = r.customer_unique_id;
+
+
+
+
+
+
