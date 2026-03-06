@@ -14,7 +14,7 @@ Objectives:
 #### **Dataset:** Brazilian E-Commerce Public Dataset (Olist)
 #### **Description:**  
 This project performs exploratory data analysis on Brazilian e-commerce data to understand customer behavior, order patterns, revenue performance, and retention using SQL.
-#### **Business Questions
+#### **Business Questions**
 The analysis answers several key business questions:
 - How many orders are placed each year?
 - Which product categories generate the most revenue?
