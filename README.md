@@ -25,15 +25,15 @@ The analysis answers several key business questions:
 - What share of revenue comes from repeat customers?
 - What is the customer retention rate within three months?
 #### **Key Analyses:**
-**Data Exploration**
+##### **Data Exploration**
 - Exploring database structure
 - Checking available tables and columns
 - Understanding dataset relationships
-**Sales & Revenue Analysis**
+##### **Sales & Revenue Analysis**
 - Order volume trends over time
 - Revenue by product category
 - Seller revenue ranking
-**Customer Behavior Analysis**
+##### **Customer Behavior Analysis**
 - One-time vs repeat customers
 - Revenue contribution from repeat customers
 - Customer retention analysis
