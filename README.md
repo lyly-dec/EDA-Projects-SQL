@@ -26,7 +26,7 @@ The analysis answers several key business questions:
 - What is the customer retention rate within three months?
 #### **Key Analyses:**
 **Data Exploration**
-- Exploring database structure-
+- Exploring database structure
 - Checking available tables and columns
 - Understanding dataset relationships
 **Sales & Revenue Analysis**
