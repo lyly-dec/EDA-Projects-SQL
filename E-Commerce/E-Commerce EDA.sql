@@ -91,15 +91,17 @@ FROM total_sales;
 
 -- 3.4. How are customers distributed between one-time and repeat purchasers,
 --  and what is the repeat customer rate?
-WITH order_count_table as 
-(SELECT  c.customer_unique_id, COUNT(o.order_id) as order_count
-FROM customers c
-JOIN orders o ON o.customer_id = c.customer_id
-GROUP BY c.customer_unique_id)
-SELECT SUM(CASE WHEN order_count = 1 THEN 1 END) as One_time_customers,
-	   SUM(CASE WHEN order_count > 1 THEN 1 END) as Repeat_customers,
-	   ROUND(100.0 * SUM(CASE WHEN order_count > 1 THEN 1 END) / COUNT(*),2) as repeat_customer_rate;
-FROM order_count_table
+WITH order_count_table AS (
+    SELECT c.customer_unique_id, COUNT(o.order_id) AS order_count
+    FROM customers c
+    JOIN orders o ON o.customer_id = c.customer_id
+    GROUP BY c.customer_unique_id
+)
+SELECT 
+    SUM(CASE WHEN order_count = 1 THEN 1 END) AS One_time_customers,
+    SUM(CASE WHEN order_count > 1 THEN 1 END) AS Repeat_customers,
+    ROUND(100.0 * SUM(CASE WHEN order_count > 1 THEN 1 END) / COUNT(*), 2) AS repeat_customer_rate
+FROM order_count_table;
 -- 3.5. What share of total revenue comes from repeat customers?
 WITH repeat_customers as 
 (SELECT  c.customer_unique_id, COUNT(o.order_id) as order_count
